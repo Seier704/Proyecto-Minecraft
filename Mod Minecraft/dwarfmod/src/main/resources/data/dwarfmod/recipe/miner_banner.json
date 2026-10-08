@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "WWW",
+    "WPW",
+    " S "
+  ],
+  "key": {
+    "W": "minecraft:red_wool",
+    "P": "minecraft:iron_pickaxe",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "dwarfmod:miner_banner",
+    "count": 1
+  }
+}

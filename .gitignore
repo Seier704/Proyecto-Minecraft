@@ -1,0 +1,27 @@
+# JDK local y fuentes decompiladas de Minecraft (no se publican)
+Mod Minecraft/tools/
+Mod Minecraft/_src/
+
+# Build y caches de Gradle
+Mod Minecraft/dwarfmod/.gradle/
+Mod Minecraft/dwarfmod/build/
+Mod Minecraft/dwarfmod/run/
+
+# Logs de ejecucion
+Mod Minecraft/run_err.txt
+Mod Minecraft/run_out.txt
+
+# Backups locales
+Mod Minecraft/backups_before_*/
+
+# Varios
+.idea/
+*.iml
+.vscode/
+*.class
+*.log
+.env
+
+# Material de terceros (referencias)
+Mod Minecraft/Referencias/
+Mod Minecraft/Modelos Npc/

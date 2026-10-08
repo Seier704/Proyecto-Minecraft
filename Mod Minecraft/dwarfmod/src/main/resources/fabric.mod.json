@@ -1,0 +1,22 @@
+{
+	"schemaVersion": 1,
+	"id": "dwarfmod",
+	"version": "${version}",
+	"name": "Dwarf NPC",
+	"description": "Adds a dwarf NPC that appears in villages.",
+	"authors": ["fsilv"],
+	"license": "All-Rights-Reserved",
+	"icon": "assets/dwarfmod/icon.png",
+	"environment": "*",
+	"accessWidener": "dwarfmod.accesswidener",
+  "entrypoints": {
+		"main": ["com.dwarfmod.DwarfMod"],
+		"client": ["com.dwarfmod.client.DwarfModClient"]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
