@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "dwarfmod:block/miner_banner"
+    "layer0": "dwarfmod:item/miner_banner"
   }
 }

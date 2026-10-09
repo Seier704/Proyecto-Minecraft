@@ -54,5 +54,17 @@
   "item.dwarfmod.dwarven_axe": "Hacha Enana",
   "item.dwarfmod.dwarven_hoe": "Azada Enana",
   "block.dwarfmod.miner_banner": "Estandarte Minero Enano",
-  "dwarfmod.banner.assigned": "Se han asignado %s mineros contratados a este estandarte"
+  "dwarfmod.banner.assigned": "Se han asignado %s mineros contratados a este estandarte",
+  "dwarfmod.banner.title": "Mineros contratados",
+  "dwarfmod.banner.none": "No hay mineros contratados cerca",
+  "dwarfmod.banner.mine": "Minar",
+  "dwarfmod.banner.stop": "Parar",
+  "dwarfmod.banner.size": "Tamaño: %s",
+  "dwarfmod.banner.depth": "Profundidad: %s",
+  "dwarfmod.banner.inventory": "VISTA DE INVENTARIO",
+  "dwarfmod.banner.state.mining": "Minando",
+  "dwarfmod.banner.state.free": "Libre",
+  "dwarfmod.banner.state.full": "Inventario lleno",
+  "dwarfmod.banner.done": "Los mineros terminaron: no queda zona por excavar",
+  "dwarfmod.tool.given": "%s ahora usa %s"
 }

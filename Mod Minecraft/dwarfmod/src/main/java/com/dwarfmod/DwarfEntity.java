@@ -99,6 +99,25 @@ public class DwarfEntity extends AbstractVillager {
 	private int giftCooldown = 0;
 	private int damageEnchantRoll = -1;
 	private @Nullable BlockPos bannerPos;
+	private ItemStack workTool = ItemStack.EMPTY;
+
+	public ItemStack getWorkTool() {
+		return this.workTool;
+	}
+
+	public void setWorkTool(ItemStack tool) {
+		this.workTool = tool;
+	}
+
+	public boolean isInventoryFull() {
+		var inv = this.getInventory();
+		for (int i = 0; i < inv.getContainerSize(); i++) {
+			if (inv.getItem(i).isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public @Nullable BlockPos getBannerPos() {
 		return this.bannerPos;
@@ -417,6 +436,18 @@ public class DwarfEntity extends AbstractVillager {
 		}
 		int stage = friendshipStage(friendshipPoints(player.getUUID()));
 
+		if (!player.isShiftKeyDown() && this.getRole() == MINER && this.followUuid != null && isPickaxe(held)) {
+			ItemStack old = this.workTool;
+			this.workTool = held.copyWithCount(1);
+			held.shrink(1);
+			if (!old.isEmpty() && !player.getInventory().add(old)) {
+				this.spawnAtLocation((ServerLevel) this.level(), old);
+			}
+			this.playSound(SoundEvents.ARMOR_EQUIP_IRON.value(), 1.0F, 1.0F);
+			player.sendOverlayMessage(Component.translatable("dwarfmod.tool.given", this.getDisplayName(), this.workTool.getHoverName()));
+			return InteractionResult.SUCCESS;
+		}
+
 		if (player.isShiftKeyDown()) {
 			if (held.is(Items.EMERALD) && this.getRole() == MINER) {
 				return this.tryHire(player, held, stage);
@@ -475,6 +506,10 @@ public class DwarfEntity extends AbstractVillager {
 		return InteractionResult.SUCCESS;
 	}
 
+	public static boolean isPickaxe(ItemStack stack) {
+		return stack.is(net.minecraft.tags.ItemTags.PICKAXES) || stack.is(ModItems.DWARVEN_PICKAXE);
+	}
+
 	private InteractionResult tryHire(Player player, ItemStack held, int stage) {
 		if (stage < TRUSTED) {
 			player.sendOverlayMessage(Component.translatable("dwarfmod.hire.locked", this.getDisplayName()));
@@ -500,9 +535,15 @@ public class DwarfEntity extends AbstractVillager {
 			this.giftCooldown--;
 		}
 		boolean fighting = this.getTarget() != null && this.getTarget().isAlive();
-		Item wanted = fighting ? Items.IRON_AXE : this.idleItem();
-		if (!this.getMainHandItem().is(wanted)) {
-			this.setItemSlot(EquipmentSlot.MAINHAND, wanted == null ? ItemStack.EMPTY : new ItemStack(wanted));
+		if (!fighting && this.isWorking()) {
+			if (this.getMainHandItem() != this.workTool) {
+				this.setItemSlot(EquipmentSlot.MAINHAND, this.workTool);
+			}
+		} else {
+			Item wanted = fighting ? Items.IRON_AXE : this.idleItem();
+			if (!this.getMainHandItem().is(wanted)) {
+				this.setItemSlot(EquipmentSlot.MAINHAND, wanted == null ? ItemStack.EMPTY : new ItemStack(wanted));
+			}
 		}
 
 		if (this.followUuid == null && this.tickCount % 100 == 20) {
@@ -519,9 +560,10 @@ public class DwarfEntity extends AbstractVillager {
 		if (this.hiredTicks > 0) {
 			this.hiredTicks--;
 			if (this.hiredTicks == 0) {
+				Player owner = this.followUuid == null ? null : level.getPlayerByUUID(this.followUuid);
 				this.followUuid = null;
 				this.setBannerPos(null);
-				Player owner = level.getPlayerByUUID(this.followUuid);
+				this.setWorking(false);
 				if (owner != null) {
 					owner.sendOverlayMessage(Component.translatable("dwarfmod.hire.end", this.getDisplayName()));
 				}
@@ -799,6 +841,9 @@ public class DwarfEntity extends AbstractVillager {
 		if (this.stationPos != null) {
 			output.store("AnvilPos", BlockPos.CODEC, this.stationPos);
 		}
+		if (!this.workTool.isEmpty()) {
+			output.store("WorkTool", ItemStack.CODEC, this.workTool);
+		}
 		if (this.bannerPos != null) {
 			output.store("BannerPos", BlockPos.CODEC, this.bannerPos);
 		}
@@ -823,6 +868,7 @@ public class DwarfEntity extends AbstractVillager {
 		}
 		this.stationPos = input.read("AnvilPos", BlockPos.CODEC).orElse(null);
 		this.bannerPos = input.read("BannerPos", BlockPos.CODEC).orElse(null);
+		this.workTool = input.read("WorkTool", ItemStack.CODEC).orElse(ItemStack.EMPTY);
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {

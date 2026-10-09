@@ -104,18 +104,35 @@ public class DwarfMod implements ModInitializer {
 
 		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(DwarfBannerActionRequest.TYPE, (payload, context) -> {
 			var player = context.player();
-			if (player.level().getEntity(payload.dwarfId()) instanceof DwarfEntity dwarf) {
+			if (!(player.containerMenu instanceof MinerBannerMenu menu) || menu.getBannerPos() == null) {
+				return;
+			}
+			BlockPos bannerPos = menu.getBannerPos();
+			if (payload.action() == 3) { // Refresh the list of hired miners
+				sendBannerDwarves(player, bannerPos);
+				return;
+			}
+			if (player.level().getEntity(payload.dwarfId()) instanceof DwarfEntity dwarf && bannerPos.equals(dwarf.getBannerPos())) {
 				if (payload.action() == 0) { // Select
-					if (player.containerMenu instanceof MinerBannerMenu menu) {
-						menu.selectedDwarfId = dwarf.getId();
-						menu.dwarfInventory.delegate = dwarf.getInventory();
-						menu.broadcastChanges(); // Sync slots
-					}
-				} else if (payload.action() == 1) { // Work
+					menu.selectedDwarfId = dwarf.getId();
+					menu.dwarfInventory.delegate = dwarf.getInventory();
+					menu.broadcastChanges(); // Sync slots
+				} else if (payload.action() == 1) { // Mine
 					dwarf.setWorking(true);
+					menu.blockEntity.setMining(true);
 				} else if (payload.action() == 2) { // Stop
 					dwarf.setWorking(false);
 				}
+			}
+		});
+		net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.serverboundPlay().register(BannerConfigRequest.TYPE, BannerConfigRequest.CODEC);
+		net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.clientboundPlay().register(BannerDwarvesPayload.TYPE, BannerDwarvesPayload.CODEC);
+		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(BannerConfigRequest.TYPE, (payload, context) -> {
+			var player = context.player();
+			if (player.containerMenu instanceof MinerBannerMenu menu && menu.blockEntity != null
+				&& player.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(menu.getBannerPos())) <= 64.0) {
+				menu.blockEntity.setMiningMode(payload.mode());
+				menu.blockEntity.setMiningDepth(payload.depth());
 			}
 		});
 
@@ -163,6 +180,22 @@ public class DwarfMod implements ModInitializer {
 			dispatcher.register(root);
 		});
 		LOGGER.info("Dwarf NPC loaded");
+	}
+
+	/** Sends the player the hired miners assigned to the banner at {@code bannerPos} (radius 32). */
+	private static void sendBannerDwarves(net.minecraft.server.level.ServerPlayer player, BlockPos bannerPos) {
+		var list = new java.util.ArrayList<BannerDwarvesPayload.Entry>();
+		for (DwarfEntity dwarf : player.level().getEntitiesOfClass(DwarfEntity.class, new AABB(bannerPos).inflate(32.0))) {
+			// A miner hired by this player after the banner was placed has no banner yet: adopt it when the menu opens.
+			if (dwarf.getRole() == DwarfEntity.MINER && dwarf.getBannerPos() == null
+				&& player.getUUID().equals(dwarf.getFollowUuid())) {
+				dwarf.setBannerPos(bannerPos);
+			}
+			if (dwarf.getRole() == DwarfEntity.MINER && bannerPos.equals(dwarf.getBannerPos())) {
+				list.add(new BannerDwarvesPayload.Entry(dwarf.getId(), dwarf.isWorking(), dwarf.isInventoryFull(), dwarf.getWorkTool().copy()));
+			}
+		}
+		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(player, new BannerDwarvesPayload(list));
 	}
 
 	private static boolean isDwarfBiome(Holder<Biome> biome) {

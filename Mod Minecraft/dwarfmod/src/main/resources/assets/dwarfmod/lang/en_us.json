@@ -54,7 +54,19 @@
   "item.dwarfmod.dwarven_axe": "Dwarven Axe",
   "item.dwarfmod.dwarven_hoe": "Dwarven Hoe",
   "block.dwarfmod.miner_banner": "Dwarven Miner Banner",
-  "dwarfmod.banner.assigned": "Assigned %s hired miners to this banner"
+  "dwarfmod.banner.assigned": "Assigned %s hired miners to this banner",
+  "dwarfmod.banner.title": "Hired miners",
+  "dwarfmod.banner.none": "No hired miners nearby",
+  "dwarfmod.banner.mine": "Mine",
+  "dwarfmod.banner.stop": "Stop",
+  "dwarfmod.banner.size": "Size: %s",
+  "dwarfmod.banner.depth": "Depth: %s",
+  "dwarfmod.banner.inventory": "INVENTORY PREVIEW",
+  "dwarfmod.banner.state.mining": "Mining",
+  "dwarfmod.banner.state.free": "Free",
+  "dwarfmod.banner.state.full": "Inventory full",
+  "dwarfmod.banner.done": "The miners are done: no area left to dig",
+  "dwarfmod.tool.given": "%s now uses %s"
 }
 
 

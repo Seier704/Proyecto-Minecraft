@@ -30,6 +30,9 @@ public class MinerBannerBlock extends Block implements EntityBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
+        if (level.getBlockEntity(pos) instanceof MinerBannerBlockEntity be) {
+            be.setTunnelDir(placer.getDirection());
+        }
 
         if (!level.isClientSide() && level instanceof ServerLevel serverLevel && placer instanceof Player player) {
             int assignedCount = 0;

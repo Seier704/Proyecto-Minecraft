@@ -14,6 +14,7 @@ public class DwarfDepositGoal extends Goal {
     private final DwarfEntity dwarf;
     private final double speedModifier;
     private BlockPos targetChest;
+    private int cooldown;
 
     public DwarfDepositGoal(DwarfEntity dwarf, double speedModifier) {
         this.dwarf = dwarf;
@@ -25,6 +26,10 @@ public class DwarfDepositGoal extends Goal {
     public boolean canUse() {
         if (this.dwarf.getBannerPos() == null) return false;
         if (this.dwarf.getInventory().isEmpty()) return false;
+        if (this.cooldown > 0) {
+            this.cooldown--;
+            return false;
+        }
         
         // Deposit if it's night OR if the inventory is full
         long time = this.dwarf.level().getOverworldClockTime() % 24000L;
@@ -65,39 +70,39 @@ public class DwarfDepositGoal extends Goal {
             this.dwarf.getNavigation().stop();
             depositItems();
             this.targetChest = null;
+            this.cooldown = 200;
         }
     }
 
     private void depositItems() {
         if (!(this.dwarf.level() instanceof ServerLevel level)) return;
-        
+
         BlockEntity be = level.getBlockEntity(this.targetChest);
-        if (be instanceof Container chest) {
-            for (int i = 0; i < this.dwarf.getInventory().getContainerSize(); i++) {
-                ItemStack stack = this.dwarf.getInventory().getItem(i);
-                if (!stack.isEmpty()) {
-                    // Try to insert into chest
-                    for (int j = 0; j < chest.getContainerSize(); j++) {
-                        ItemStack chestStack = chest.getItem(j);
-                        if (chestStack.isEmpty()) {
-                            chest.setItem(j, stack.copy());
-                            this.dwarf.getInventory().setItem(i, ItemStack.EMPTY);
-                            break;
-                        } else if (ItemStack.isSameItemSameComponents(chestStack, stack) && chestStack.getCount() < chestStack.getMaxStackSize()) {
-                            int space = chestStack.getMaxStackSize() - chestStack.getCount();
-                            if (stack.getCount() <= space) {
-                                chestStack.grow(stack.getCount());
-                                this.dwarf.getInventory().setItem(i, ItemStack.EMPTY);
-                                break;
-                            } else {
-                                chestStack.grow(space);
-                                stack.shrink(space);
-                            }
-                        }
+        if (!(be instanceof Container chest)) return;
+        var inv = this.dwarf.getInventory();
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack stack = inv.getItem(i);
+            if (stack.isEmpty()) continue;
+            // Merge into matching stacks first, then fill empty slots; whatever does not fit stays with the dwarf.
+            for (int j = 0; j < chest.getContainerSize() && !stack.isEmpty(); j++) {
+                ItemStack target = chest.getItem(j);
+                if (!target.isEmpty() && ItemStack.isSameItemSameComponents(target, stack)) {
+                    int move = Math.min(stack.getCount(), target.getMaxStackSize() - target.getCount());
+                    if (move > 0) {
+                        target.grow(move);
+                        stack.shrink(move);
                     }
                 }
             }
+            for (int j = 0; j < chest.getContainerSize() && !stack.isEmpty(); j++) {
+                if (chest.getItem(j).isEmpty()) {
+                    chest.setItem(j, stack.copy());
+                    stack.setCount(0);
+                }
+            }
+            if (stack.isEmpty()) inv.setItem(i, ItemStack.EMPTY);
         }
+        chest.setChanged();
     }
 
     private BlockPos findChestNearBanner() {

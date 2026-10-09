@@ -21,6 +21,8 @@ Mod Minecraft/backups_before_*/
 *.class
 *.log
 .env
+.claude
+imagenes/
 
 # Material de terceros (referencias)
 Mod Minecraft/Referencias/

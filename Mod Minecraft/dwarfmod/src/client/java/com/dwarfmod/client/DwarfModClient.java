@@ -16,6 +16,11 @@ public class DwarfModClient implements ClientModInitializer {
 		DwarvenArmorRenderer.init();
 		DwarfInfoClient.init();
 		net.minecraft.client.gui.screens.MenuScreens.register(DwarfMod.MINER_BANNER_MENU, MinerBannerScreen::new);
+		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(com.dwarfmod.BannerDwarvesPayload.TYPE, (payload, context) -> {
+			if (net.minecraft.client.Minecraft.getInstance().gui.screen() instanceof MinerBannerScreen screen) {
+				screen.setDwarves(payload.dwarves());
+			}
+		});
 	}
 }
 

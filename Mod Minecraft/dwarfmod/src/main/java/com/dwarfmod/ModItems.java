@@ -126,7 +126,17 @@ public class ModItems {
 			}
 		});
 	}
+
+	/** Ticks a dwarf needs to break a block of hardness 1.5 (stone) with the given tool; iron = 25, diamond 30% faster. */
+	public static int miningTicks(net.minecraft.world.item.ItemStack tool) {
+		if (tool.isEmpty()) return 100;
+		if (tool.is(DWARVEN_PICKAXE)) return 11;
+		if (tool.is(net.minecraft.world.item.Items.NETHERITE_PICKAXE)) return 14;
+		if (tool.is(net.minecraft.world.item.Items.DIAMOND_PICKAXE)) return 17;
+		if (tool.is(net.minecraft.world.item.Items.IRON_PICKAXE)) return 25;
+		if (tool.is(net.minecraft.world.item.Items.GOLDEN_PICKAXE)) return 40;
+		if (tool.is(net.minecraft.world.item.Items.STONE_PICKAXE)) return 35;
+		if (tool.is(net.minecraft.world.item.Items.WOODEN_PICKAXE)) return 50;
+		return 100;
+	}
 }
-
-
-

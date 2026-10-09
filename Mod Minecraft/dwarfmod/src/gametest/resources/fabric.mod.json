@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "dwarfmod-test",
+  "version": "1.0.0",
+  "name": "Dwarf Mod client tests",
+  "environment": "client",
+  "entrypoints": {
+    "fabric-client-gametest": ["com.dwarfmod.test.BannerGameTest"]
+  },
+  "depends": {"dwarfmod": "*"}
+}
