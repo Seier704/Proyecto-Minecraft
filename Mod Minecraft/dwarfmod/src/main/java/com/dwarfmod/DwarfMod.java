@@ -35,7 +35,7 @@ public class DwarfMod implements ModInitializer {
 	public static final String MOD_ID = "dwarfmod";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	private static final String CHECKED_TAG = "dwarfmod_checked_v4";
-	private static final int MAX_DWARFS = 3;
+	private static final int MAX_DWARFS = 4;
 	private static final double NEARBY_RADIUS = 64.0;
 
 	public static final ResourceKey<EntityType<?>> DWARF_KEY = ResourceKey.create(Registries.ENTITY_TYPE, id("dwarf"));
@@ -159,23 +159,19 @@ public class DwarfMod implements ModInitializer {
 				}
 			}
 		});
-		// /dwarf <blacksmith|brewer|miner> spawns a dwarf of that role at the player.
+		// /dwarf <blacksmith|brewer|miner|warrior [1-3]> spawns a dwarf of that role at the player; warriors without a
+		// tier roll it like in villages (60/30/10%).
 		net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback.EVENT.register((dispatcher, buildContext, selection) -> {
-			String[] names = {"blacksmith", "brewer", "miner"};
+			String[] names = {"blacksmith", "brewer", "miner", "warrior"};
 			var root = net.minecraft.commands.Commands.literal("dwarf").requires(net.minecraft.commands.Commands.hasPermission(net.minecraft.commands.Commands.LEVEL_GAMEMASTERS));
 			for (int r = 0; r < names.length; r++) {
 				final int role = r;
-				root.then(net.minecraft.commands.Commands.literal(names[r]).executes(ctx -> {
-					var src = ctx.getSource();
-					DwarfEntity dwarf = DWARF.create(src.getLevel(), EntitySpawnReason.COMMAND);
-					if (dwarf == null) {
-						return 0;
-					}
-					dwarf.setRole(role);
-					dwarf.snapTo(src.getPosition().x, src.getPosition().y, src.getPosition().z, 0.0F, 0.0F);
-					src.getLevel().addFreshEntity(dwarf);
-					return 1;
-				}));
+				var literal = net.minecraft.commands.Commands.literal(names[r]).executes(ctx -> spawnDwarf(ctx.getSource(), role, 0));
+				if (role == DwarfEntity.WARRIOR) {
+					literal.then(net.minecraft.commands.Commands.argument("tier", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, 3))
+						.executes(ctx -> spawnDwarf(ctx.getSource(), role, com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "tier"))));
+				}
+				root.then(literal);
 			}
 			dispatcher.register(root);
 		});
@@ -213,7 +209,7 @@ public class DwarfMod implements ModInitializer {
 		if (!village.isValid()) {
 			return;
 		}
-		// 1 to 3 dwarfs per village, fixed by the world seed and the village start chunk.
+		// 1 to 4 dwarfs per village (blacksmith, brewer, miner, warrior), fixed by the world seed and the village start chunk.
 		long hash = level.getSeed() ^ (village.getChunkPos().x() * 341873128712L) ^ (village.getChunkPos().z() * 132897987541L);
 		int target = 1 + new java.util.Random(hash).nextInt(MAX_DWARFS);
 		int existing = level.getEntitiesOfClass(DwarfEntity.class, AABB.of(village.getBoundingBox()).inflate(NEARBY_RADIUS)).size();
@@ -223,11 +219,31 @@ public class DwarfMod implements ModInitializer {
 			if (dwarf == null) {
 				return;
 			}
-			dwarf.setRole(i);
+			setUpDwarf(dwarf, i, 0);
 			dwarf.snapTo(pos.getX() + 0.5 + (i - existing), pos.getY(), pos.getZ() + 0.5, level.getRandom().nextFloat() * 360.0F, 0.0F);
 			level.addFreshEntity(dwarf);
 			LOGGER.info("Dwarf spawned in village at {}", pos);
 		}
+	}
+
+	private static int spawnDwarf(net.minecraft.commands.CommandSourceStack src, int role, int tier) {
+		DwarfEntity dwarf = DWARF.create(src.getLevel(), EntitySpawnReason.COMMAND);
+		if (dwarf == null) {
+			return 0;
+		}
+		setUpDwarf(dwarf, role, tier);
+		dwarf.snapTo(src.getPosition().x, src.getPosition().y, src.getPosition().z, 0.0F, 0.0F);
+		src.getLevel().addFreshEntity(dwarf);
+		return 1;
+	}
+
+	/** Role, warrior tier (0 = roll 60/30/10%) and full health for a freshly created dwarf. */
+	private static void setUpDwarf(DwarfEntity dwarf, int role, int tier) {
+		dwarf.setRole(role);
+		if (role == DwarfEntity.WARRIOR) {
+			dwarf.setWarriorTier(tier > 0 ? tier : DwarfEntity.rollWarriorTier(dwarf.getRandom()));
+		}
+		dwarf.setHealth(dwarf.getMaxHealth());
 	}
 
 	public static Identifier id(String path) {

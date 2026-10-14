@@ -5,7 +5,7 @@
   "name": "Dwarf Mod client tests",
   "environment": "client",
   "entrypoints": {
-    "fabric-client-gametest": ["com.dwarfmod.test.BannerGameTest"]
+    "fabric-client-gametest": ["com.dwarfmod.test.DwarfLookGameTest", "com.dwarfmod.test.BannerGameTest"]
   },
   "depends": {"dwarfmod": "*"}
 }

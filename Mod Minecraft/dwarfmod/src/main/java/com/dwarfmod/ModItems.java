@@ -35,6 +35,11 @@ public class ModItems {
 	public static final Tier STEEL = new Tier("dwarven_steel", 20, 2, 5, 6, 2, 9, 0.0F, ItemTags.REPAIRS_IRON_ARMOR);
 	public static final Tier DWARVEN = new Tier("dwarven", 28, 2, 5, 7, 3, 10, 1.0F, ItemTags.REPAIRS_IRON_ARMOR);
 	public static final List<Tier> TIERS = List.of(BRONZE, STEEL, DWARVEN);
+	// The dwarf warriors' gear (tier 1 copper, 2 steel, 3 veteran), sold only by the blacksmith; 3D models from art/make_bbmodel.py.
+	public static final Tier WARRIOR_COPPER = new Tier("dwarven_warrior_copper", 16, 2, 4, 5, 2, 9, 0.0F, ItemTags.REPAIRS_COPPER_ARMOR);
+	public static final Tier WARRIOR_STEEL = new Tier("dwarven_warrior_steel", 30, 3, 6, 7, 3, 10, 1.5F, ItemTags.REPAIRS_IRON_ARMOR);
+	public static final Tier WARRIOR_VETERAN = new Tier("dwarven_warrior_veteran", 35, 3, 6, 8, 3, 12, 2.5F, ItemTags.REPAIRS_IRON_ARMOR);
+	public static final List<Tier> WARRIOR_TIERS = List.of(WARRIOR_COPPER, WARRIOR_STEEL, WARRIOR_VETERAN);
 
 	public static class Tier {
 		public final String name;
@@ -119,7 +124,7 @@ public class ModItems {
 			entries.accept(DWARVEN_AXE);
 			entries.accept(DWARVEN_HOE);
 			entries.accept(MINER_BANNER);
-			for (Tier tier : TIERS) {
+			for (Tier tier : java.util.stream.Stream.concat(TIERS.stream(), WARRIOR_TIERS.stream()).toList()) {
 				for (Item piece : tier.pieces()) {
 					entries.accept(piece);
 				}

@@ -158,6 +158,7 @@ public class DwarfMineBlockGoal extends Goal {
                     level.addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(level, c.x, c.y, c.z, remainder));
                 }
             }
+            this.dwarf.playSwingAnimation();
             level.destroyBlock(this.targetBlock, false, this.dwarf);
 
             if (!tool.isEmpty()) {

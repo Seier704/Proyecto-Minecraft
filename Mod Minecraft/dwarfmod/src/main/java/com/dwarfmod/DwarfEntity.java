@@ -1,5 +1,12 @@
 package com.dwarfmod;
 
+import com.geckolib.animatable.GeoEntity;
+import com.geckolib.animatable.instance.AnimatableInstanceCache;
+import com.geckolib.animatable.manager.AnimatableManager;
+import com.geckolib.animation.AnimationController;
+import com.geckolib.animation.RawAnimation;
+import com.geckolib.animation.object.PlayState;
+import com.geckolib.util.GeckoLibUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +34,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -63,14 +75,21 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Dwarf villager with three roles (blacksmith, brewer, miner). Like a villager it trades and levels up; on top of that
+ * Dwarf villager with four roles (blacksmith, brewer, miner, warrior). Like a villager it trades and levels up; on top of that
  * each player has a friendship with each dwarf that changes prices and unlocks following and (miner) hiring.
+ * The warrior guards the village bell, keeps watch at night and fights with a two-handed greataxe. Warriors spawn
+ * as tier 1 (copper, 60%), 2 (steel, 30%) or 3 (veteran, 10%); the tier sets their gear, health, armor and damage.
+ * Rendered with GeckoLib: model and animations come from art/make_dwarf_geo.py.
  */
-public class DwarfEntity extends AbstractVillager {
+public class DwarfEntity extends AbstractVillager implements GeoEntity {
 	public static final int BLACKSMITH = 0;
 	public static final int BREWER = 1;
 	public static final int MINER = 2;
-	public static final int ROLES = 3;
+	public static final int WARRIOR = 3;
+	public static final int ROLES = 4;
+	private static final Identifier WARRIOR_HEALTH = DwarfMod.id("warrior_health");
+	private static final Identifier WARRIOR_DAMAGE = DwarfMod.id("warrior_damage");
+	private static final Identifier WARRIOR_ARMOR = DwarfMod.id("warrior_armor");
 
 	// Friendship points needed for each stage: Distrustful, Acquaintance, Friend, Trusted, Ally.
 	public static final int[] FRIENDSHIP_STEPS = {0, 15, 50, 110, 200};
@@ -84,6 +103,23 @@ public class DwarfEntity extends AbstractVillager {
 
 	private static final EntityDataAccessor<Integer> DATA_ROLE = SynchedEntityData.defineId(DwarfEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> DATA_WORKING = SynchedEntityData.defineId(DwarfEntity.class, EntityDataSerializers.BOOLEAN);
+	// Synced so the client shows the warrior's gear for his tier.
+	private static final EntityDataAccessor<Integer> DATA_TIER = SynchedEntityData.defineId(DwarfEntity.class, EntityDataSerializers.INT);
+	// Warrior tiers 1..3: bonus health, armor and attack damage (base 20 / 0 / 5); the axe hits harder each tier.
+	private static final double[] TIER_HEALTH = {10.0, 20.0, 30.0};
+	private static final double[] TIER_ARMOR = {4.0, 8.0, 12.0};
+	private static final double[] TIER_DAMAGE = {2.0, 4.0, 7.0};
+	private static final int[] TIER_SPAWN_WEIGHT = {60, 30, 10};
+
+	public static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.dwarf.idle");
+	public static final RawAnimation WALK = RawAnimation.begin().thenLoop("animation.dwarf.walk");
+	public static final RawAnimation ATTACK = RawAnimation.begin().thenPlay("animation.dwarf.attack");
+	public static final RawAnimation IDLE_AXE = RawAnimation.begin().thenLoop("animation.dwarf.idle_axe");
+	public static final RawAnimation WALK_AXE = RawAnimation.begin().thenLoop("animation.dwarf.walk_axe");
+	public static final RawAnimation ATTACK_AXE = RawAnimation.begin().thenPlay("animation.dwarf.attack_axe");
+	/** Ticks from the start of attack_axe to the moment the blade lands (0.55 s in the animation). */
+	private static final int AXE_IMPACT_TICKS = 11;
+	private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
 
 	private static final int SEARCH_XZ = 24;
 	private static final int SEARCH_Y = 6;
@@ -147,6 +183,7 @@ public class DwarfEntity extends AbstractVillager {
 		super.defineSynchedData(builder);
 		builder.define(DATA_ROLE, BLACKSMITH);
 		builder.define(DATA_WORKING, false);
+		builder.define(DATA_TIER, 1);
 	}
 
 	public int getRole() {
@@ -155,6 +192,49 @@ public class DwarfEntity extends AbstractVillager {
 
 	public void setRole(int role) {
 		this.entityData.set(DATA_ROLE, Math.floorMod(role, ROLES));
+		this.applyWarriorStats();
+	}
+
+	public int getWarriorTier() {
+		return this.entityData.get(DATA_TIER);
+	}
+
+	public void setWarriorTier(int tier) {
+		this.entityData.set(DATA_TIER, Math.max(1, Math.min(3, tier)));
+		this.applyWarriorStats();
+	}
+
+	/** Village spawn roll for a new warrior: 60% tier 1, 30% tier 2, 10% tier 3. */
+	public static int rollWarriorTier(net.minecraft.util.RandomSource random) {
+		int roll = random.nextInt(100);
+		for (int i = 0; i < TIER_SPAWN_WEIGHT.length; i++) {
+			roll -= TIER_SPAWN_WEIGHT[i];
+			if (roll < 0) {
+				return i + 1;
+			}
+		}
+		return 1;
+	}
+
+	private void applyWarriorStats() {
+		boolean warrior = this.getRole() == WARRIOR;
+		int t = this.getWarriorTier() - 1;
+		this.setRoleBonus(Attributes.MAX_HEALTH, WARRIOR_HEALTH, warrior ? TIER_HEALTH[t] : 0.0);
+		this.setRoleBonus(Attributes.ATTACK_DAMAGE, WARRIOR_DAMAGE, warrior ? TIER_DAMAGE[t] : 0.0);
+		this.setRoleBonus(Attributes.ARMOR, WARRIOR_ARMOR, warrior ? TIER_ARMOR[t] : 0.0);
+	}
+
+	// Permanent modifiers are saved with the attributes, so health above 20 survives a reload.
+	private void setRoleBonus(Holder<Attribute> attribute, Identifier id, double amount) {
+		AttributeInstance instance = this.getAttribute(attribute);
+		if (instance == null) {
+			return;
+		}
+		if (amount == 0.0) {
+			instance.removeModifier(id);
+		} else {
+			instance.addOrReplacePermanentModifier(new AttributeModifier(id, amount, AttributeModifier.Operation.ADD_VALUE));
+		}
 	}
 
 	public boolean isWorking() {
@@ -163,6 +243,29 @@ public class DwarfEntity extends AbstractVillager {
 
 	public void setWorking(boolean working) {
 		this.entityData.set(DATA_WORKING, working);
+	}
+
+	// ---- GeckoLib ----
+
+	@Override
+	public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+		controllers.add(new AnimationController<DwarfEntity>("base", 5, test -> {
+			boolean axe = this.getRole() == WARRIOR;
+			return test.setAndContinue(test.isMoving() ? (axe ? WALK_AXE : WALK) : (axe ? IDLE_AXE : IDLE));
+		}));
+		controllers.add(new AnimationController<DwarfEntity>("action", 2, test -> PlayState.STOP)
+			.triggerableAnim("attack", ATTACK)
+			.triggerableAnim("attack_axe", ATTACK_AXE));
+	}
+
+	@Override
+	public AnimatableInstanceCache getAnimatableInstanceCache() {
+		return this.geoCache;
+	}
+
+	/** One-handed swing (workers hitting or mining); synced to watching clients by GeckoLib. */
+	public void playSwingAnimation() {
+		this.triggerAnim("action", "attack");
 	}
 
 	@Override
@@ -211,6 +314,39 @@ public class DwarfEntity extends AbstractVillager {
 		public void stop() {
 			super.stop();
 			this.dwarf.setAggressive(false);
+			this.axeSwing = 0;
+		}
+
+		// Ticks left until a started two-handed swing lands (warriors only).
+		private int axeSwing;
+
+		@Override
+		protected void checkAndPerformAttack(LivingEntity target) {
+			if (this.dwarf.getRole() != WARRIOR) {
+				if (this.canPerformAttack(target)) {
+					this.dwarf.playSwingAnimation();
+				}
+				super.checkAndPerformAttack(target);
+			} else if (this.axeSwing == 0 && this.canPerformAttack(target)) {
+				this.resetAttackCooldown();
+				this.axeSwing = AXE_IMPACT_TICKS;
+				this.dwarf.triggerAnim("action", "attack_axe");
+			}
+		}
+
+		@Override
+		protected int getAttackInterval() {
+			return this.dwarf.getRole() == WARRIOR ? this.adjustedTickDelay(24) : super.getAttackInterval();
+		}
+
+		private void landAxeSwing() {
+			if (this.axeSwing > 0 && --this.axeSwing == 0) {
+				LivingEntity target = this.dwarf.getTarget();
+				if (target != null && target.isAlive() && this.dwarf.isWithinMeleeAttackRange(target)
+					&& this.dwarf.level() instanceof ServerLevel serverLevel) {
+					this.dwarf.doHurtTarget(serverLevel, target);
+				}
+			}
 		}
 
 		@Override
@@ -223,6 +359,7 @@ public class DwarfEntity extends AbstractVillager {
 				}
 				super.tick();
 			}
+			this.landAxeSwing();
 		}
 	}
 
@@ -291,7 +428,8 @@ public class DwarfEntity extends AbstractVillager {
 
 		@Override
 		public boolean canUse() {
-			if (!isNight() || busy() || DwarfEntity.this.tickCount % 20 != 0) {
+			// Warriors keep watch at night instead of going to bed.
+			if (!isNight() || busy() || DwarfEntity.this.getRole() == WARRIOR || DwarfEntity.this.tickCount % 20 != 0) {
 				return false;
 			}
 			this.bed = findBed();
@@ -540,7 +678,8 @@ public class DwarfEntity extends AbstractVillager {
 				this.setItemSlot(EquipmentSlot.MAINHAND, this.workTool);
 			}
 		} else {
-			Item wanted = fighting ? Items.IRON_AXE : this.idleItem();
+			// Warriors carry the greataxe that is part of their model, so they hold no item.
+			Item wanted = this.getRole() == WARRIOR ? null : fighting ? Items.IRON_AXE : this.idleItem();
 			if (!this.getMainHandItem().is(wanted)) {
 				this.setItemSlot(EquipmentSlot.MAINHAND, wanted == null ? ItemStack.EMPTY : new ItemStack(wanted));
 			}
@@ -583,6 +722,7 @@ public class DwarfEntity extends AbstractVillager {
 		return switch (this.getRole()) {
 			case BREWER -> s -> s.is(Blocks.BARREL);
 			case MINER -> s -> s.is(Blocks.BLAST_FURNACE);
+			case WARRIOR -> s -> s.is(Blocks.BELL);
 			default -> s -> s.is(BlockTags.ANVIL);
 		};
 	}
@@ -602,7 +742,8 @@ public class DwarfEntity extends AbstractVillager {
 		}
 		if (this.stationPos == null) {
 			this.stationPos = this.findStation(level, matcher);
-			if (this.stationPos == null) {
+			// The warrior guards the village bell; he never builds one.
+			if (this.stationPos == null && this.getRole() != WARRIOR) {
 				this.stationPos = this.placeStation(level);
 			}
 		}
@@ -664,7 +805,33 @@ public class DwarfEntity extends AbstractVillager {
 		switch (this.getRole()) {
 			case BREWER -> this.brewerTrades(o, lvl);
 			case MINER -> this.minerTrades(o, lvl);
+			case WARRIOR -> this.warriorTrades(o, lvl);
 			default -> this.blacksmithTrades(serverLevel, o, lvl);
+		}
+	}
+
+	// Buys monster trophies and sells what a fighter needs. His armor is only sold by the blacksmith.
+	private void warriorTrades(MerchantOffers o, int lvl) {
+		switch (lvl) {
+			case 1 -> {
+				o.add(buy(Items.ROTTEN_FLESH, 24, 1, 16, 5));
+				o.add(sell(Items.SHIELD, 1, 5, 8, 5));
+			}
+			case 2 -> {
+				o.add(buy(Items.BONE, 16, 1, 16, 8));
+				o.add(sell(Items.IRON_AXE, 1, 3, 8, 8));
+			}
+			case 3 -> {
+				o.add(buy(Items.GUNPOWDER, 8, 1, 12, 10));
+				o.add(sell(ModItems.STOUT, 2, 3, 10, 10));
+			}
+			case 4 -> {
+				o.add(buy(Items.ENDER_PEARL, 2, 3, 8, 15));
+				o.add(sell(Items.GOLDEN_APPLE, 1, 10, 4, 15));
+			}
+			case 5 -> o.add(new MerchantOffer(new ItemCost(Items.EMERALD, 20), Optional.of(new ItemCost(Items.IRON_SWORD, 1)), new ItemStack(ModItems.DWARVEN_AXE), 3, 20, 0.05F));
+			default -> {
+			}
 		}
 	}
 
@@ -734,10 +901,12 @@ public class DwarfEntity extends AbstractVillager {
 				o.add(toolForIron(serverLevel, Items.IRON_AXE, 5, 8, Enchantments.EFFICIENCY));
 				o.add(toolForIron(serverLevel, Items.IRON_PICKAXE, 6, 8, Enchantments.EFFICIENCY));
 				addArmor(o, ModItems.BRONZE, null, new int[] {5, 8, 7, 4}, 10);
+				addWarriorArmor(o, ModItems.WARRIOR_COPPER, null, new int[] {3, 5, 4, 2}, Items.COPPER_INGOT, new int[] {5, 8, 7, 4}, 10);
 			}
 			case 3 -> {
 				o.add(toolForIron(serverLevel, Items.IRON_SWORD, 4, 8, this.randomDamageEnchant()));
 				addArmor(o, ModItems.STEEL, ModItems.BRONZE, new int[] {4, 6, 5, 3}, 15);
+				addWarriorArmor(o, ModItems.WARRIOR_STEEL, ModItems.WARRIOR_COPPER, null, Items.EMERALD, new int[] {4, 7, 6, 3}, 15);
 			}
 			case 4 -> addArmor(o, ModItems.DWARVEN, ModItems.STEEL, new int[] {6, 10, 8, 5}, 20);
 			case 5 -> {
@@ -746,6 +915,7 @@ public class DwarfEntity extends AbstractVillager {
 				o.add(toolUpgrade(Items.IRON_AXE, ModItems.DWARVEN_AXE, 6));
 				o.add(toolUpgrade(Items.IRON_PICKAXE, ModItems.DWARVEN_PICKAXE, 6));
 				o.add(toolUpgrade(Items.IRON_SWORD, ModItems.DWARVEN_SWORD, 6));
+				addWarriorArmor(o, ModItems.WARRIOR_VETERAN, ModItems.WARRIOR_STEEL, null, Items.DIAMOND, new int[] {1, 2, 2, 1}, 25);
 			}
 			default -> {
 			}
@@ -770,6 +940,17 @@ public class DwarfEntity extends AbstractVillager {
 	// Hand over the matching iron tool plus emeralds and get the dwarven one (better than diamond, below netherite).
 	private static MerchantOffer toolUpgrade(Item from, Item to, int emeralds) {
 		return new MerchantOffer(new ItemCost(from, 1), Optional.of(new ItemCost(Items.EMERALD, emeralds)), new ItemStack(to), 6, 20, 0.05F);
+	}
+
+	// The dwarf warrior's sets (copper, steel, veteran): the first costs emeralds + copper, the next ones take
+	// the piece of the previous set plus `extra`.
+	private static void addWarriorArmor(MerchantOffers o, ModItems.Tier tier, ModItems.@Nullable Tier previous,
+			int @Nullable [] emeralds, Item extra, int[] extraCount, int xp) {
+		Item[] pieces = tier.pieces();
+		for (int i = 0; i < pieces.length; i++) {
+			ItemCost first = previous == null ? new ItemCost(Items.EMERALD, emeralds[i]) : new ItemCost(previous.pieces()[i], 1);
+			o.add(new MerchantOffer(first, Optional.of(new ItemCost(extra, extraCount[i])), new ItemStack(pieces[i]), 6, xp, 0.05F));
+		}
 	}
 
 	// Tier 1 costs iron only. Later tiers upgrade the piece from the previous tier.
@@ -830,6 +1011,7 @@ public class DwarfEntity extends AbstractVillager {
 		output.putInt("DwarfLevel", this.level);
 		output.putInt("DwarfXp", this.xp);
 		output.putInt("DwarfRole", this.getRole());
+		output.putInt("WarriorTier", this.getWarriorTier());
 		output.putInt("DamageEnchant", this.damageEnchantRoll);
 		output.putInt("HiredTicks", this.hiredTicks);
 		if (this.followUuid != null) {
@@ -854,6 +1036,7 @@ public class DwarfEntity extends AbstractVillager {
 		super.readAdditionalSaveData(input);
 		this.level = Math.max(1, input.getIntOr("DwarfLevel", 1));
 		this.xp = input.getIntOr("DwarfXp", 0);
+		this.entityData.set(DATA_TIER, Math.max(1, Math.min(3, input.getIntOr("WarriorTier", 1))));
 		this.setRole(input.getIntOr("DwarfRole", BLACKSMITH));
 		this.damageEnchantRoll = input.getIntOr("DamageEnchant", -1);
 		this.hiredTicks = input.getIntOr("HiredTicks", 0);
