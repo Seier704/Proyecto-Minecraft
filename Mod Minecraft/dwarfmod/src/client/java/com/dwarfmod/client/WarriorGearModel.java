@@ -87,17 +87,14 @@ public final class WarriorGearModel {
 		MeshDefinition mesh = new MeshDefinition();
 		PartDefinition root = mesh.getRoot();
 		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create()
-			.texOffs(16, 0).addBox(-4F, -8F, -4F, 8F, 3F, 8F, new CubeDeformation(0.65F))
-			.texOffs(48, 13).addBox(-0.5F, -9F, -4F, 1F, 1F, 8F, new CubeDeformation(0.4F))
-			.texOffs(88, 23).addBox(-0.5F, -5F, -5F, 1F, 3F, 1F, new CubeDeformation(0.15F))
-			.texOffs(24, 13).addBox(-5F, -5F, -3.5F, 1F, 5F, 5F, new CubeDeformation(0.3F))
-			.texOffs(72, 23).addBox(-6.5F, -7.5F, -1F, 2F, 2F, 2F, new CubeDeformation(0.1F))
-			.texOffs(18, 31).addBox(-7.5F, -8.5F, -0.5F, 1F, 2F, 1F, new CubeDeformation(0.15F))
-			.texOffs(22, 31).addBox(-7.5F, -10.5F, -0.5F, 1F, 2F, 1F, new CubeDeformation(-0.2F))
-			.texOffs(36, 13).addBox(4F, -5F, -3.5F, 1F, 5F, 5F, new CubeDeformation(0.3F))
-			.texOffs(80, 23).addBox(4.5F, -7.5F, -1F, 2F, 2F, 2F, new CubeDeformation(0.1F))
-			.texOffs(26, 31).addBox(6.5F, -8.5F, -0.5F, 1F, 2F, 1F, new CubeDeformation(0.15F))
-			.texOffs(30, 31).addBox(6.5F, -10.5F, -0.5F, 1F, 2F, 1F, new CubeDeformation(-0.2F)), PartPose.offset(0F, 0F, 0F));
+			.texOffs(76, 0).addBox(-4F, -8F, -4F, 8F, 2F, 8F, new CubeDeformation(0.7F))
+			.texOffs(0, 12).addBox(-4F, -6F, -4F, 8F, 2F, 8F, new CubeDeformation(0.8F))
+			.texOffs(78, 12).addBox(-0.8F, -9F, -4F, 2F, 1F, 8F, new CubeDeformation(0.5F))
+			.texOffs(0, 39).addBox(-4F, -9F, -0.8F, 8F, 1F, 2F, new CubeDeformation(0.45F))
+			.texOffs(120, 31).addBox(-0.8F, -5F, -5F, 2F, 4F, 1F, new CubeDeformation(0.2F))
+			.texOffs(92, 31).addBox(-4F, -5F, 4F, 8F, 4F, 1F, new CubeDeformation(0.5F))
+			.texOffs(48, 22).addBox(-5F, -5F, -3.5F, 1F, 4F, 5F, new CubeDeformation(0.3F))
+			.texOffs(60, 22).addBox(4F, -5F, -3.5F, 1F, 4F, 5F, new CubeDeformation(0.3F)), PartPose.offset(0F, 0F, 0F));
 		head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.ZERO);
 		root.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0F, 0F, 0F));
 		root.addOrReplaceChild("right_arm", CubeListBuilder.create(), PartPose.offset(-5F, 2F, 0F));
@@ -113,16 +110,18 @@ public final class WarriorGearModel {
 		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.offset(0F, 0F, 0F));
 		head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.ZERO);
 		root.addOrReplaceChild("body", CubeListBuilder.create()
-			.texOffs(100, 0).addBox(-4F, 0F, -2F, 8F, 7F, 4F, new CubeDeformation(0.6F))
-			.texOffs(0, 0).addBox(-3.5F, 1F, 2.7F, 7F, 12F, 1F), PartPose.offset(0F, 0F, 0F));
+			.texOffs(0, 0).addBox(-4F, 0F, -2F, 8F, 8F, 4F, new CubeDeformation(0.7F))
+			.texOffs(56, 12).addBox(-3.5F, 0.5F, -2F, 7F, 6F, 4F, new CubeDeformation(0.6F))
+			.texOffs(88, 31).addBox(-2.5F, 0.5F, 1.9F, 1F, 6F, 0F, new CubeDeformation(0.72F))
+			.texOffs(90, 31).addBox(1.5F, 0.5F, 1.9F, 1F, 6F, 0F, new CubeDeformation(0.72F)), PartPose.offset(0F, 0F, 0F));
 		root.addOrReplaceChild("right_arm", CubeListBuilder.create()
-			.texOffs(48, 0).addBox(-4.5F, -2F, -3.5F, 6F, 4F, 7F, new CubeDeformation(0.25F))
-			.texOffs(66, 13).addBox(-4F, 1.5F, -3F, 5F, 2F, 6F, new CubeDeformation(0.3F))
-			.texOffs(110, 13).addBox(-3F, 6F, -2F, 4F, 4F, 4F, new CubeDeformation(0.45F)), PartPose.offset(-5F, 2F, 0F));
+			.texOffs(24, 0).addBox(-4.5F, -2F, -3.5F, 6F, 4F, 7F, new CubeDeformation(0.3F))
+			.texOffs(72, 22).addBox(-4F, 1.7F, -3F, 5F, 2F, 6F, new CubeDeformation(0.25F))
+			.texOffs(0, 31).addBox(-3F, 5.2F, -2F, 4F, 4F, 4F, new CubeDeformation(0.45F)), PartPose.offset(-5F, 2F, 0F));
 		root.addOrReplaceChild("left_arm", CubeListBuilder.create()
-			.texOffs(74, 0).addBox(-1.5F, -2F, -3.5F, 6F, 4F, 7F, new CubeDeformation(0.25F))
-			.texOffs(88, 13).addBox(-1F, 1.5F, -3F, 5F, 2F, 6F, new CubeDeformation(0.3F))
-			.texOffs(0, 23).addBox(-1F, 6F, -2F, 4F, 4F, 4F, new CubeDeformation(0.45F)), PartPose.offset(5F, 2F, 0F));
+			.texOffs(50, 0).addBox(-1.5F, -2F, -3.5F, 6F, 4F, 7F, new CubeDeformation(0.3F))
+			.texOffs(94, 22).addBox(-1F, 1.7F, -3F, 5F, 2F, 6F, new CubeDeformation(0.25F))
+			.texOffs(16, 31).addBox(-1F, 5.2F, -2F, 4F, 4F, 4F, new CubeDeformation(0.45F)), PartPose.offset(5F, 2F, 0F));
 		root.addOrReplaceChild("right_leg", CubeListBuilder.create(), PartPose.offset(-1.9F, 12F, 0F));
 		root.addOrReplaceChild("left_leg", CubeListBuilder.create(), PartPose.offset(1.9F, 12F, 0F));
 		return LayerDefinition.create(mesh, 128, 128);
@@ -134,15 +133,16 @@ public final class WarriorGearModel {
 		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.offset(0F, 0F, 0F));
 		head.addOrReplaceChild("hat", CubeListBuilder.create(), PartPose.ZERO);
 		root.addOrReplaceChild("body", CubeListBuilder.create()
-			.texOffs(0, 13).addBox(-4F, 10F, -2F, 8F, 6F, 4F, new CubeDeformation(0.6F))
-			.texOffs(48, 23).addBox(-4F, 8F, -2F, 8F, 2F, 4F, new CubeDeformation(0.85F))
-			.texOffs(10, 31).addBox(-1.5F, 8F, -3F, 3F, 2F, 1F, new CubeDeformation(0.45F)), PartPose.offset(0F, 0F, 0F));
+			.texOffs(32, 12).addBox(-4F, 10F, -2F, 8F, 6F, 4F, new CubeDeformation(0.6F))
+			.texOffs(32, 31).addBox(-4F, 8F, -2F, 8F, 2F, 4F, new CubeDeformation(0.85F))
+			.texOffs(40, 39).addBox(-1.5F, 8F, -3F, 3F, 2F, 1F, new CubeDeformation(0.5F))
+			.texOffs(110, 31).addBox(1F, 11F, 2.6F, 3F, 3F, 2F), PartPose.offset(0F, 0F, 0F));
 		root.addOrReplaceChild("right_arm", CubeListBuilder.create(), PartPose.offset(-5F, 2F, 0F));
 		root.addOrReplaceChild("left_arm", CubeListBuilder.create(), PartPose.offset(5F, 2F, 0F));
 		root.addOrReplaceChild("right_leg", CubeListBuilder.create()
-			.texOffs(92, 23).addBox(-2F, 4F, -3F, 4F, 2F, 1F, new CubeDeformation(0.3F)), PartPose.offset(-1.9F, 12F, 0F));
+			.texOffs(98, 12).addBox(-2F, 2F, -2F, 4F, 5F, 4F, new CubeDeformation(0.15F)), PartPose.offset(-1.9F, 12F, 0F));
 		root.addOrReplaceChild("left_leg", CubeListBuilder.create()
-			.texOffs(112, 23).addBox(-2F, 4F, -3F, 4F, 2F, 1F, new CubeDeformation(0.3F)), PartPose.offset(1.9F, 12F, 0F));
+			.texOffs(16, 22).addBox(-2F, 2F, -2F, 4F, 5F, 4F, new CubeDeformation(0.15F)), PartPose.offset(1.9F, 12F, 0F));
 		return LayerDefinition.create(mesh, 128, 128);
 	}
 
@@ -155,11 +155,13 @@ public final class WarriorGearModel {
 		root.addOrReplaceChild("right_arm", CubeListBuilder.create(), PartPose.offset(-5F, 2F, 0F));
 		root.addOrReplaceChild("left_arm", CubeListBuilder.create(), PartPose.offset(5F, 2F, 0F));
 		root.addOrReplaceChild("right_leg", CubeListBuilder.create()
-			.texOffs(16, 23).addBox(-2F, 8F, -2F, 4F, 4F, 4F, new CubeDeformation(0.45F))
-			.texOffs(102, 23).addBox(-2F, 10F, -3F, 4F, 2F, 1F, new CubeDeformation(0.45F)), PartPose.offset(-1.9F, 12F, 0F));
+			.texOffs(0, 22).addBox(-2F, 7F, -2F, 4F, 5F, 4F, new CubeDeformation(0.45F))
+			.texOffs(56, 31).addBox(-2F, 6.5F, -2F, 4F, 2F, 4F, new CubeDeformation(0.6F))
+			.texOffs(20, 39).addBox(-2F, 9.8F, -3F, 4F, 2F, 1F, new CubeDeformation(0.5F)), PartPose.offset(-1.9F, 12F, 0F));
 		root.addOrReplaceChild("left_leg", CubeListBuilder.create()
-			.texOffs(32, 23).addBox(-2F, 8F, -2F, 4F, 4F, 4F, new CubeDeformation(0.45F))
-			.texOffs(0, 31).addBox(-2F, 10F, -3F, 4F, 2F, 1F, new CubeDeformation(0.45F)), PartPose.offset(1.9F, 12F, 0F));
+			.texOffs(32, 22).addBox(-2F, 7F, -2F, 4F, 5F, 4F, new CubeDeformation(0.45F))
+			.texOffs(72, 31).addBox(-2F, 6.5F, -2F, 4F, 2F, 4F, new CubeDeformation(0.6F))
+			.texOffs(30, 39).addBox(-2F, 9.8F, -3F, 4F, 2F, 1F, new CubeDeformation(0.5F)), PartPose.offset(1.9F, 12F, 0F));
 		return LayerDefinition.create(mesh, 128, 128);
 	}
 

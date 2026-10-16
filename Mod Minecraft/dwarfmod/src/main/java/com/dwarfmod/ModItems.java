@@ -36,9 +36,13 @@ public class ModItems {
 	public static final Tier DWARVEN = new Tier("dwarven", 28, 2, 5, 7, 3, 10, 1.0F, ItemTags.REPAIRS_IRON_ARMOR);
 	public static final List<Tier> TIERS = List.of(BRONZE, STEEL, DWARVEN);
 	// The dwarf warriors' gear (tier 1 copper, 2 steel, 3 veteran), sold only by the blacksmith; 3D models from art/make_bbmodel.py.
-	public static final Tier WARRIOR_COPPER = new Tier("dwarven_warrior_copper", 16, 2, 4, 5, 2, 9, 0.0F, ItemTags.REPAIRS_COPPER_ARMOR);
-	public static final Tier WARRIOR_STEEL = new Tier("dwarven_warrior_steel", 30, 3, 6, 7, 3, 10, 1.5F, ItemTags.REPAIRS_IRON_ARMOR);
-	public static final Tier WARRIOR_VETERAN = new Tier("dwarven_warrior_veteran", 35, 3, 6, 8, 3, 12, 2.5F, ItemTags.REPAIRS_IRON_ARMOR);
+	// Balanced against vanilla (defense points are whole numbers, so totals are rounded to the nearest piece split):
+	//   copper  vs copper  armor (dur x11, 1/3/4/2 = 10, ench 8):  +15% -> dur x13, 1/3/5/2 = 11, ench 9
+	//   steel   vs iron    armor (dur x15, 2/5/6/2 = 15, ench 9):  +20% -> dur x18, 2/6/7/3 = 18, ench 11
+	//   veteran vs diamond armor (dur x33, 3/6/8/3 = 20, tough 2, ench 10): +15% -> dur x38, 3/7/9/4 = 23, tough 2.3, ench 12
+	public static final Tier WARRIOR_COPPER = new Tier("dwarven_warrior_copper", 13, 1, 3, 5, 2, 9, 0.0F, ItemTags.REPAIRS_COPPER_ARMOR);
+	public static final Tier WARRIOR_STEEL = new Tier("dwarven_warrior_steel", 18, 2, 6, 7, 3, 11, 0.0F, ItemTags.REPAIRS_IRON_ARMOR);
+	public static final Tier WARRIOR_VETERAN = new Tier("dwarven_warrior_veteran", 38, 3, 7, 9, 4, 12, 2.3F, ItemTags.REPAIRS_DIAMOND_ARMOR);
 	public static final List<Tier> WARRIOR_TIERS = List.of(WARRIOR_COPPER, WARRIOR_STEEL, WARRIOR_VETERAN);
 
 	public static class Tier {

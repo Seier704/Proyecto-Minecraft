@@ -1,4 +1,4 @@
-﻿"""The dwarf entity for GeckoLib: geometry, texture and animations, all from this script.
+"""The dwarf entity for GeckoLib: geometry, texture and animations, all from this script.
 
 Outputs
  - art/blockbench/dwarf.bbmodel          every variant in one file (GeckoLib "Animated Entity Model" format),
@@ -56,7 +56,7 @@ m.cube("left_leg", "leg_l", [0, 0, -2.5], [5, 10, 2.5], leg_face)
 add_helmet(m, "head_copper")
 add_chest(m, "body_copper", "right_arm_copper", "left_arm_copper")
 add_boots(m, "right_leg_copper", "left_leg_copper")
-add_warrior(m, *(f"{b}_steel" for b in BONES))
+add_guard(m, *(f"{b}_steel" for b in BONES))  # warrior tier 2: guard look (steel plate over mail, red beard)
 add_elite(m, *(f"{b}_elite" for b in BONES))
 add_greataxe(m, "greataxe")
 m.build()
@@ -388,7 +388,7 @@ def show(variant):
         if name == "greataxe":
             return tier > 0
         if name == "beard":
-            return gear != "elite"
+            return gear not in ("elite", "steel")
         for gg in GEARS:
             if name.endswith("_" + gg):
                 return gg == gear
@@ -396,7 +396,7 @@ def show(variant):
     return vis
 
 
-for variant in ("warrior_3", "warrior_1"):
+for variant in ("warrior_3", "warrior_2", "warrior_1"):
     vis = show(variant)
     frames = [render(attack_axe, t, vis, os.path.join(OUT, "_frame.png")) for t in (0.0, 0.38, 0.55, 0.7)]
     frames.append(render(walk_axe, 0.25, vis, os.path.join(OUT, "_frame.png")))

@@ -47,3 +47,9 @@
 - Attacks: controller "action" triggerable anims; warriors start attack_axe and the hit lands 11 ticks later (MeleeGoal.axeSwing); workers trigger "attack" on hits and when mining a block.
 - Warrior armor (copper/steel/veteran) only from the blacksmith: L2 copper (emeralds+copper), L3 steel (copper piece+emeralds), L5 veteran (steel piece+diamonds).
 - BannerGameTest fails at "No dwarf became working" (Mine button stays disabled after the row click).
+
+## Warrior tier 2 "guard" look (generated, not yet seen in game)
+- Reference: front/back/armor-set image (round helm with cross band, red beard, light steel plate over chainmail, studded bracers, brown boots with steel toe caps). Slot name stays `steel` (gear group `*_steel`, item set `dwarven_warrior_steel`), so Java/trades/animations are unchanged.
+- bbtools.py: `add_guard`, `add_guard_helmet`, `add_guard_beard` + painters g*_face. make_dwarf_geo.py uses `add_guard` for the `_steel` groups; make_bbmodel.py `player_guard` builds the worn armor (WarriorGearModel + dwarven_warrior_steel_gear.png). Old `add_warrior`/`player_steel` (horned helm + cape) are kept but unused.
+- DwarfRenderer hides the base beard for steel too (the guard brings its own red beard). preview_warrior_2.png added to the preview strip.
+- Python is not installed system-wide; run the scripts with any Python 3 + pillow + numpy from art/.

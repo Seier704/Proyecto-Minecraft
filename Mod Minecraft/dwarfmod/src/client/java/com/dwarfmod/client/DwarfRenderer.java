@@ -50,7 +50,8 @@ public class DwarfRenderer extends GeoEntityRenderer<DwarfEntity, LivingEntityRe
 				snapshots.ifPresent(bone + "_" + g, s -> s.skipRender(!g.equals(gear)));
 			}
 		}
-		snapshots.ifPresent("beard", s -> s.skipRender(gear.equals("elite")));
+		// Tier 2 (steel) and tier 3 (elite) bring their own red beard.
+		snapshots.ifPresent("beard", s -> s.skipRender(gear.equals("elite") || gear.equals("steel")));
 		snapshots.ifPresent("greataxe", s -> s.skipRender(!warrior));
 		DefaultAnimations.hardcodedHeadRotation(info, snapshots, "head");
 	}

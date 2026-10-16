@@ -109,7 +109,7 @@
     }
    },
    "type": "cube",
-   "uuid": "b100ed5d-1cfe-4b6b-903e-9e0eb0e475e3"
+   "uuid": "0424219e-74bf-4305-a751-afe56c5efff9"
   },
   {
    "name": "helmet_crest",
@@ -197,7 +197,7 @@
     }
    },
    "type": "cube",
-   "uuid": "2baf6c20-13b1-44e7-a12f-c1e6b47d19cb"
+   "uuid": "ebca514c-f1c7-4772-9d24-3edad8ad9911"
   },
   {
    "name": "nose_guard",
@@ -285,7 +285,7 @@
     }
    },
    "type": "cube",
-   "uuid": "3da4b7b1-72d8-4143-8733-e1b1eef60445"
+   "uuid": "f1443fe2-74de-4f13-aae0-802e44a7038d"
   },
   {
    "name": "cheek_guard_r",
@@ -373,7 +373,7 @@
     }
    },
    "type": "cube",
-   "uuid": "8ec5325a-3298-4733-a246-c02ce9576e35"
+   "uuid": "82c6bf57-c1c6-4574-b096-abc107e5902d"
   },
   {
    "name": "cheek_guard_l",
@@ -461,7 +461,7 @@
     }
    },
    "type": "cube",
-   "uuid": "b14ac773-56ad-477f-ad30-64666bb34cb7"
+   "uuid": "935726b9-9d87-480d-af9f-163b6643b405"
   },
   {
    "name": "chestplate",
@@ -549,7 +549,7 @@
     }
    },
    "type": "cube",
-   "uuid": "ea043a49-ebcb-4b7b-b06a-cc67b4fad025"
+   "uuid": "8740655d-3868-4a8b-b4fc-8a80fbee123f"
   },
   {
    "name": "tunic_skirt",
@@ -637,7 +637,7 @@
     }
    },
    "type": "cube",
-   "uuid": "5b15ba32-2355-4062-b4e0-971d641a9d5a"
+   "uuid": "522eab6b-720d-4d59-b2e3-b4b960bfeb21"
   },
   {
    "name": "belt",
@@ -725,7 +725,7 @@
     }
    },
    "type": "cube",
-   "uuid": "68f62f43-03cb-4eb3-bc0c-244e9164c544"
+   "uuid": "8a6108d6-236d-4b08-9c72-d90a257dc37d"
   },
   {
    "name": "buckle",
@@ -813,7 +813,7 @@
     }
    },
    "type": "cube",
-   "uuid": "45f11fb1-481c-4b7a-8553-f3ee1858f72a"
+   "uuid": "481d2e39-6b88-41cb-8965-f46ac153c1db"
   },
   {
    "name": "pauldron_r",
@@ -901,7 +901,7 @@
     }
    },
    "type": "cube",
-   "uuid": "147f9dad-96e1-4365-a878-b03cf7a13ffb"
+   "uuid": "6bb788ae-612e-4739-a92b-26771c2aebcd"
   },
   {
    "name": "bracer_r",
@@ -989,7 +989,7 @@
     }
    },
    "type": "cube",
-   "uuid": "41b4d554-d702-4437-9186-80c8f41ebb4c"
+   "uuid": "39c33dca-4c6d-4525-bf57-44102a9aa58b"
   },
   {
    "name": "pauldron_l",
@@ -1077,7 +1077,7 @@
     }
    },
    "type": "cube",
-   "uuid": "16d064c0-58af-4ae1-95dc-315bb58b7637"
+   "uuid": "26b60388-a9ac-49cc-868b-6596394e3080"
   },
   {
    "name": "bracer_l",
@@ -1165,7 +1165,7 @@
     }
    },
    "type": "cube",
-   "uuid": "07ee0f70-1cfa-4945-8e10-89698a8bbd45"
+   "uuid": "76171d32-b521-49e4-a363-e65a79a975af"
   },
   {
    "name": "boot_r",
@@ -1253,7 +1253,7 @@
     }
    },
    "type": "cube",
-   "uuid": "35385009-1d35-450e-865c-ba9069dcc685"
+   "uuid": "4ce492cf-1b0d-4a88-b40e-09b2fea6e70d"
   },
   {
    "name": "boot_toe_r",
@@ -1341,7 +1341,7 @@
     }
    },
    "type": "cube",
-   "uuid": "4bc09dd4-7591-4e11-8546-41fbd871fe2b"
+   "uuid": "20b02b37-83d7-4844-8f09-80f3499b9258"
   },
   {
    "name": "boot_cuff_r",
@@ -1429,7 +1429,7 @@
     }
    },
    "type": "cube",
-   "uuid": "417e1ecd-33d6-4211-9b42-8f846d14ca37"
+   "uuid": "aa7d03fb-f564-4a46-a67b-bd2bf6969d2b"
   },
   {
    "name": "boot_l",
@@ -1517,7 +1517,7 @@
     }
    },
    "type": "cube",
-   "uuid": "24065b6d-d664-4a91-98f5-0d1842372e0b"
+   "uuid": "893ceaa1-a9a3-4764-8ec5-42247d6964c1"
   },
   {
    "name": "boot_toe_l",
@@ -1605,7 +1605,7 @@
     }
    },
    "type": "cube",
-   "uuid": "db24a977-0124-4abb-bf1f-5e2142f6b196"
+   "uuid": "b0c1548d-2e2c-4dc4-9d3c-818756975dc8"
   },
   {
    "name": "boot_cuff_l",
@@ -1693,7 +1693,7 @@
     }
    },
    "type": "cube",
-   "uuid": "b6c1f019-ffa8-406e-8aa1-5b8dd8a7700e"
+   "uuid": "a773d3b8-c1d2-4677-b749-114ab9675c75"
   }
  ],
  "outliner": [
@@ -1705,18 +1705,18 @@
     0
    ],
    "color": 0,
-   "uuid": "46208970-0056-41bc-895c-012b8e0e3437",
+   "uuid": "228a06b8-fbcf-4cc4-a934-8df5a3fe55d4",
    "export": true,
    "isOpen": true,
    "locked": false,
    "visibility": true,
    "autouv": 0,
    "children": [
-    "b100ed5d-1cfe-4b6b-903e-9e0eb0e475e3",
-    "2baf6c20-13b1-44e7-a12f-c1e6b47d19cb",
-    "3da4b7b1-72d8-4143-8733-e1b1eef60445",
-    "8ec5325a-3298-4733-a246-c02ce9576e35",
-    "b14ac773-56ad-477f-ad30-64666bb34cb7"
+    "0424219e-74bf-4305-a751-afe56c5efff9",
+    "ebca514c-f1c7-4772-9d24-3edad8ad9911",
+    "f1443fe2-74de-4f13-aae0-802e44a7038d",
+    "82c6bf57-c1c6-4574-b096-abc107e5902d",
+    "935726b9-9d87-480d-af9f-163b6643b405"
    ]
   },
   {
@@ -1727,7 +1727,7 @@
     0
    ],
    "color": 0,
-   "uuid": "9342a37b-3a0b-4ff9-b1ad-b8cb48cdfd75",
+   "uuid": "6d991dc6-cfbe-4c5b-b528-61f9cb5467fe",
    "export": true,
    "isOpen": true,
    "locked": false,
@@ -1742,15 +1742,15 @@
       0
      ],
      "color": 0,
-     "uuid": "f90748da-03da-4a63-8622-94abc85ed80b",
+     "uuid": "83dd257a-8f31-4e7a-af47-7f81eea8971b",
      "export": true,
      "isOpen": true,
      "locked": false,
      "visibility": true,
      "autouv": 0,
      "children": [
-      "147f9dad-96e1-4365-a878-b03cf7a13ffb",
-      "41b4d554-d702-4437-9186-80c8f41ebb4c"
+      "6bb788ae-612e-4739-a92b-26771c2aebcd",
+      "39c33dca-4c6d-4525-bf57-44102a9aa58b"
      ]
     },
     {
@@ -1761,21 +1761,21 @@
       0
      ],
      "color": 0,
-     "uuid": "484795b6-a709-471f-b335-40ccbb29b4d0",
+     "uuid": "469ba7a1-4edb-41c1-83de-008abd1914e9",
      "export": true,
      "isOpen": true,
      "locked": false,
      "visibility": true,
      "autouv": 0,
      "children": [
-      "16d064c0-58af-4ae1-95dc-315bb58b7637",
-      "07ee0f70-1cfa-4945-8e10-89698a8bbd45"
+      "26b60388-a9ac-49cc-868b-6596394e3080",
+      "76171d32-b521-49e4-a363-e65a79a975af"
      ]
     },
-    "ea043a49-ebcb-4b7b-b06a-cc67b4fad025",
-    "5b15ba32-2355-4062-b4e0-971d641a9d5a",
-    "68f62f43-03cb-4eb3-bc0c-244e9164c544",
-    "45f11fb1-481c-4b7a-8553-f3ee1858f72a"
+    "8740655d-3868-4a8b-b4fc-8a80fbee123f",
+    "522eab6b-720d-4d59-b2e3-b4b960bfeb21",
+    "8a6108d6-236d-4b08-9c72-d90a257dc37d",
+    "481d2e39-6b88-41cb-8965-f46ac153c1db"
    ]
   },
   {
@@ -1786,16 +1786,16 @@
     0
    ],
    "color": 0,
-   "uuid": "d7d2e924-c9e8-4f41-868c-c540fc8a73e1",
+   "uuid": "a8726a77-ec2b-4c96-bc0a-de956187c7df",
    "export": true,
    "isOpen": true,
    "locked": false,
    "visibility": true,
    "autouv": 0,
    "children": [
-    "35385009-1d35-450e-865c-ba9069dcc685",
-    "4bc09dd4-7591-4e11-8546-41fbd871fe2b",
-    "417e1ecd-33d6-4211-9b42-8f846d14ca37"
+    "4ce492cf-1b0d-4a88-b40e-09b2fea6e70d",
+    "20b02b37-83d7-4844-8f09-80f3499b9258",
+    "aa7d03fb-f564-4a46-a67b-bd2bf6969d2b"
    ]
   },
   {
@@ -1806,16 +1806,16 @@
     0
    ],
    "color": 0,
-   "uuid": "e51971d4-a91f-4531-be87-fbfaf5a42506",
+   "uuid": "581d834b-6669-437b-b8b4-b68099d4daec",
    "export": true,
    "isOpen": true,
    "locked": false,
    "visibility": true,
    "autouv": 0,
    "children": [
-    "24065b6d-d664-4a91-98f5-0d1842372e0b",
-    "db24a977-0124-4abb-bf1f-5e2142f6b196",
-    "b6c1f019-ffa8-406e-8aa1-5b8dd8a7700e"
+    "893ceaa1-a9a3-4764-8ec5-42247d6964c1",
+    "b0c1548d-2e2c-4dc4-9d3c-818756975dc8",
+    "a773d3b8-c1d2-4677-b749-114ab9675c75"
    ]
   }
  ],
@@ -1844,7 +1844,7 @@
    "visible": true,
    "internal": true,
    "saved": true,
-   "uuid": "2d131cce-ea0c-465b-a036-ba5f03f6126a",
+   "uuid": "4909027f-4216-4ced-8d8d-101e22e59813",
    "relative_path": "dwarven_armor.png",
    "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAHbElEQVR4nO2aW2hcRRjH55SlD1KKllBDuoSgNYRlG0satEKqIrKU0gcvFYtULVTzKLXkpT4VX/Qh1CI+SPWhQi0Rq6iUEJYiSoKmJdVatyFuYw11DfFCiaE1pbeV72S/7beTOefMuWw36P8Hh7mcuZyZby7ffGcc5cHwq4+UVYJseutrJ0q+od4HYn3H5oMnI9U73OD227Y7avuYlNeL+Ws31PnSRXVPepXrMhyemJlTHc0ra/Loab3iwlAozbl1EXp9hPyOtc0r1OTMpaobh/lrN9Tg2JTa0t3mhtnPbeF26f3h1V9R2n07WBaUQP94DnNj6WEBUSex3yt/WEiYuuC5Dn7H4WOnp12XB0EcBsemqt+vC5/q09vF3+jVX0kh+zduG30HgPxwWSn7yaWOkemoE6SwaHDExTSTZR0883gwcKfEXQEIObh4tssVhwcCp+EJUQ+4jq3rW6pxSbTRdwXgxsgO506hGcHxsqNMsyiJTuGGy9nPHeC15Ju+yZaOSptk20nYvPJxGvLL2W9aBaNAbZIP15GE0CWeCsSL99+dqBL0wQ+/R1JW+rd0lP329KB9v29wIlK9uzemywdGSw65FPby+73T/WHqfyaz2qr/Px7/I5YS6PhpuyfWPKkKhXG1666f1Msf/ejGvffsupp4P7zSyfgg7filrpYyL+1Bo59mHq8UlJbC73837SSl7X/y7c/q6YfuVUly+fK8qge2p4MUNUoqODWsWXDO/vKnevupjHp9qOj6OZ41ZbkFyC2CoTxSW05vuxUfxN9XrqsTUxfdx4YPRy+oMMxrpx2ptZOftzHZFtMJiPA7rcg08v3onT2qPpy0SpWij2HB8EAwNZDiu5uWu51yRsRJ5Yc7qzqg2oK14bjn/CB29bT5ln9eE7r8TrnnS2VPV0I5TuoHuhItdQrZv9lsRjUS590nMtUOkoPgUk+vVQErRg4az8C2+Wkr2LNnt9q//4Abln6mnu83zo4YB69UXDnMx0Fe9cKc8b3sJrl3RmLt4YkMANPH2S5Nz60YX7RqUMOOXLIb2Y2eAaWj/dZKXFwlMAnlMGkcP21/3fN73Rla/v5zq/go+aOeDkAyOI2yRff3H6gpv69vd6RyTh3dm6gOsWHbG9bfMbBjvVXd2w+fdhpRXqx/AWSLpqMXmVfpaMXHKrlVxDVF0ipAW0A2m41cxrnirzXhdGuzKl2Y8fSPT5ZU7rHumngi/+WYyqxNqzBMlGZdt63SJ1MVhZDC7A/Dles33Xwyv5e/7gOAhUsC123r0hwcB97/C4VCrHJIqCw8k/DpPQtaCp/gQRFW+BIplOJf/7hPe9MdVTdMOZRHCluWnbTwfU3BJHQWvG6E0W3+cVYAIs4KYBKeFD5B7zks49OtzbGFz7DgSOBS+Bxvi2nAcBlhy4q9AvAgkGHJwiBY+AMXBTqSTU9Pq5aWWz84wmISHgmZZ7yc4frAKF2YiSX8sd/mQoXDlOdVVtgyIw8A3aJma4kLQz6fj70FDJ8qml9o8W46r7QJKmgmdjzYmqiiaiovqmKYimuJ87K0xb2pojNyuK+sL98ybILThFH0Nm1oL5tWj4n8iKcSpu/1fnu//k4v05SX0uQLMyqXXfiuJJXC1MDV9aqRtmipC/ihC48FKxU9XbichvPaLvclIXhWGgfPzypFjweTc1d9w57vDGUuyltJM/mN9p/D53tscfTzeJLkcrnqMm/y6y6bhUkvoG2B4llH6OzMwGBUBxZ1atCWELS0x81P//9t/uPbpluqBpt9j9ZunXKZ52WdtoMjhdr//Ye2d5ZtbAX7vpqq5uNJbjK2LVICj46VXFf/a+X1C9RkzJCnBXlly+Y2Sxjjkq0d4ovT04v2VbnXFkOe19lgQ/mkwMIi66UyyC+Fa/omOUikrYAHkI5c4YeGjpc3b37cCTwFkOWPLID6VTAbOB9bEcNeZdLrDR4owcfQIIWsPYTwGbb+BcX5zXyql4Uo8/LgoveUnt+x8MnlwSLzcHlcD9sNyM5CW6rptJUyXcDgI2CUo59+gSNsGfLSox9h78bJjiaXZ1Gx0tE2wmN0gemmYD+jjatMSjjspwyKd6wIeiqZWjkvVITvZXCrqxJoQ7Z4ZNE/iGx6ZeQ4k06w9b5VVm08du6ilQ6QdHmNxGFlSu6npmvXNjqAKa1XuaZ8+rYh39nStHK5WsrsHDizpAZF9V+AvOJtq2zJK9qmMlh4+r8DSs95C6sfVq8cOu66n93sUtc7t7r+3Jufui6HZZx89DjaH7teG3DLJpeWZY4jP7vS36XFybx6OsIvzi+vSUlrNM7Onb2N3QISvhEU9V7B/xW3s3Q9gLVGdOZ/n2VeSiANgkYriOA26gC6PT7uJQ0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIClwr8BKLrUdtv4KAAAAABJRU5ErkJggg=="
   }

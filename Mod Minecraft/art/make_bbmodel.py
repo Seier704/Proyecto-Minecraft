@@ -64,6 +64,33 @@ def player_steel(m):
         m.cube(g, "w_toe", [x0, 0, -3], [x0 + 4, 2, -2], steel_face, 0.45)
 
 
+def player_guard(m):
+    """Tier 2 set: round cross-banded helm, light steel plate over chainmail, studded bracers, steel toe caps."""
+    add_guard_helmet(Shift(m, 4), "head_head")
+    m.cube("chest_body", "g_mail", [-4, 16.5, -2], [4, 24, 2], mail_face, 0.7)
+    m.cube("chest_body", "g_breastplate", [-3.5, 17.5, -2], [3.5, 23.5, 2], gplate_face, 0.6)
+    for sx in (-2.5, 1.5):
+        m.cube("chest_body", "g_strap", [sx, 17, 1.9], [sx + 1, 23.5, 2], glove_face, 0.72)
+    for s, g in ((-1, "chest_right_arm"), (1, "chest_left_arm")):
+        bx = (-9.5, -3.5) if s < 0 else (3.5, 9.5)
+        lx = (-9, -4) if s < 0 else (4, 9)
+        gx = (-8, -4) if s < 0 else (4, 8)
+        m.cube(g, "g_pauldron", [bx[0], 20, -3.5], [bx[1], 24, 3.5], gpauldron_face, 0.3)
+        m.cube(g, "g_lame", [lx[0], 18.5, -3], [lx[1], 20.3, 3], gpauldron_face, 0.25)
+        m.cube(g, "g_bracer", [gx[0], 12.8, -2], [gx[1], 16.8, 2], gbracer_face, 0.45)
+    m.cube("legs_body", "g_mail_skirt", [-4, 8, -2], [4, 14, 2], mail_face, 0.6)
+    m.cube("legs_body", "g_belt", [-4, 14, -2], [4, 16, 2], glove_face, 0.85)
+    m.cube("legs_body", "g_buckle", [-1.5, 14, -3], [1.5, 16, -2], bsteel_face, 0.5)
+    m.cube("legs_body", "g_pouch", [1, 10, 2.6], [4, 13, 4.6], pouch_face)
+    for side, x0 in LEGS_X:
+        g = "legs_right_leg" if side == "r" else "legs_left_leg"
+        m.cube(g, "g_trousers", [x0, 5, -2], [x0 + 4, 10, 2], dcloth_face, 0.15)
+        g = "feet_right_leg" if side == "r" else "feet_left_leg"
+        m.cube(g, "g_boot", [x0, 0, -2], [x0 + 4, 5, 2], boot_face, 0.45)
+        m.cube(g, "g_boot_cuff", [x0, 4, -2], [x0 + 4, 5.5, 2], cuff_face, 0.6)
+        m.cube(g, "g_toecap", [x0, 0, -3], [x0 + 4, 2.2, -2], gbootcap_face, 0.5)
+
+
 def player_veteran(m):
     add_elite_helmet(Shift(m, 4), "head_head")
     m.cube("chest_body", "e_breastplate", [-4, 17, -2], [4, 24, 2], elite_plate_face, 0.6)
@@ -108,7 +135,7 @@ def player_layers(m, prefix):
 
 
 gear_java = ""
-for tier, seed, build in (("dwarven_warrior_copper", 31, player_copper), ("dwarven_warrior_steel", 37, player_steel),
+for tier, seed, build in (("dwarven_warrior_copper", 31, player_copper), ("dwarven_warrior_steel", 37, player_guard),
                           ("dwarven_warrior_veteran", 41, player_veteran)):
     pm = Model(tier + "_gear", seed)
     for slot in SLOTS:

@@ -707,3 +707,124 @@ def add_greataxe(m, g):
     m.cube(g, "axe_edge", [6, 19.5, -0.5], [14, 20.5, 0.5], edge_face)
     m.cube(g, "axe_spike", [9, 7.5, -0.5], [11, 9.5, 0.5], riveted_face)
     m.cube(g, "axe_tip", [12, 10.5, -0.5], [15, 11.5, 0.5], bsteel_face, -0.05)
+
+
+# ---------------------------------------------------------------- warrior level 2 (guard: round helm with a cross band,
+# red beard, light steel plate over chainmail, studded leather bracers, brown boots with steel toe caps)
+def gdome_face(p, x, y, w, h, face):
+    """Helm dome: mid steel, dark lower rim with rivets."""
+    p.fill(x, y, w, h, "steel")
+    if face not in ("up", "down"):
+        for i in range(w):
+            p.put(x + i, y + h - 1, MAT["dsteel"][2])
+        for i in range(1, w - 1, 3):
+            p.put(x + i, y + h - 2, STUD)
+
+
+def gband_face(p, x, y, w, h, face):
+    """Bright band of the cross over the helm (and the nasal guard)."""
+    p.fill(x, y, w, h, "bsteel")
+    if face not in ("up", "down") and h > 2:
+        for i in range(w):
+            p.put(x + i, y + h - 1, MAT["bsteel"][2])
+    for j in range(1, h, 3):
+        p.put(x + w // 2, y + j, STUD)
+
+
+def gplate_face(p, x, y, w, h, face):
+    """Light steel breastplate: bright top edge, dark bottom edge, center seam and rivets."""
+    p.fill(x, y, w, h, "bsteel")
+    if face in ("up", "down"):
+        return
+    for i in range(w):
+        p.put(x + i, y, (236, 240, 246))
+        p.put(x + i, y + h - 1, MAT["dsteel"][2])
+    for j in range(h):
+        p.put(x, y + j, MAT["bsteel"][2])
+        p.put(x + w - 1, y + j, MAT["bsteel"][2])
+    if face in ("north", "south"):
+        for j in range(1, h - 1):
+            p.put(x + w // 2, y + j, MAT["bsteel"][2] if j % 2 else MAT["bsteel"][1])
+        p.put(x + 1, y + 1, STUD)
+        p.put(x + w - 2, y + 1, STUD)
+
+
+def gpauldron_face(p, x, y, w, h, face):
+    """Shoulder plate: light steel with a leather-brown edge and a rivet."""
+    p.fill(x, y, w, h, "bsteel")
+    if face in ("up", "down"):
+        return
+    for i in range(w):
+        p.put(x + i, y, (236, 240, 246))
+        p.put(x + i, y + h - 1, MAT["glove"][0])
+    if h > 3:
+        for i in range(w):
+            p.put(x + i, y + h - 2, MAT["glove"][2])
+    p.put(x + w // 2, y + h // 2 - 1, STUD)
+
+
+def gbracer_face(p, x, y, w, h, face):
+    """Dark leather bracer studded with steel."""
+    p.fill(x, y, w, h, "dleather")
+    if face in ("up", "down"):
+        return
+    for i in range(w):
+        p.put(x + i, y, MAT["glove"][0])
+        p.put(x + i, y + h - 1, MAT["glove"][0])
+    for j in range(1, h - 1, 2):
+        for i in range(1, w - 1, 2):
+            p.put(x + i, y + j, STUD)
+
+
+def gbootcap_face(p, x, y, w, h, face):
+    p.fill(x, y, w, h, "bsteel")
+    if face not in ("up", "down"):
+        for i in range(w):
+            p.put(x + i, y + h - 1, MAT["bsteel"][2])
+
+
+def add_guard_helmet(m, head):
+    """Round steel helm: dome + brow band + crest band (the cross), nasal guard, cheeks, neck guard."""
+    m.cube(head, "g_helmet", [-4, 26, -4], [4, 28, 4], gdome_face, 0.7)
+    m.cube(head, "g_brow", [-4, 24.5, -4], [4, 26, 4], gband_face, 0.8)
+    m.cube(head, "g_crest_fb", [-0.8, 28, -4], [0.8, 29, 4], gband_face, 0.5)
+    m.cube(head, "g_crest_lr", [-4, 28, -0.8], [4, 29, 0.8], gband_face, 0.45)
+    m.cube(head, "g_nasal", [-0.8, 21, -5], [0.8, 25, -4], gband_face, 0.2)
+    m.cube(head, "g_neck_guard", [-4, 21, 4], [4, 25, 5], gdome_face, 0.5)
+    for x0 in (-5, 4):
+        side = "r" if x0 < 0 else "l"
+        m.cube(head, "g_cheek_" + side, [x0, 20.5, -3.5], [x0 + 1, 25, 1.5], gdome_face, 0.3)
+
+
+def add_guard_beard(m, head):
+    """Long red beard with a leather-wrapped tip (dwarf only; the player armor has none)."""
+    m.cube(head, "g_beard", [-4, 15, -5], [4, 22, -4], redbeard_face, 0.1)
+    m.cube(head, "g_beard_tip", [-2.5, 12, -5], [2.5, 15, -4], redbeard_face)
+    m.cube(head, "g_beard_end", [-1, 8.5, -5], [1, 12, -4.5], braid_face)
+    m.cube(head, "g_beard_wrap", [-1.2, 11, -5], [1.2, 12.2, -4.3], glove_face, 0.2)
+
+
+def add_guard(m, head, body, rarm, larm, rleg, lleg):
+    add_guard_helmet(m, head)
+    add_guard_beard(m, head)
+    m.cube(body, "g_mail", [-5, 13.5, -3], [5, 20, 3], mail_face, 0.65)
+    m.cube(body, "g_breastplate", [-4, 14.5, -3], [4, 19.5, 3], gplate_face, 0.55)
+    m.cube(body, "g_mail_skirt", [-5, 7, -3], [5, 13, 3], mail_face, 0.6)
+    m.cube(body, "g_belt", [-5, 12, -3], [5, 14, 3], glove_face, 0.85)
+    m.cube(body, "g_buckle", [-1.5, 12, -4], [1.5, 14, -3], bsteel_face, 0.5)
+    for sx in (-3.5, 2.5):  # leather straps over the back plate
+        m.cube(body, "g_strap", [sx, 14, 2.9], [sx + 1, 20.2, 3], glove_face, 0.72)
+    m.cube(body, "g_pouch", [2, 8.5, 3.6], [5, 12, 5.6], pouch_face)
+    for g, s in ((rarm, -1), (larm, 1)):
+        side = "r" if s < 0 else "l"
+        bx = (-10.5, -4.5) if s < 0 else (4.5, 10.5)
+        lx = (-10, -5) if s < 0 else (5, 10)
+        gx = (-9, -5) if s < 0 else (5, 9)
+        m.cube(g, "g_pauldron_" + side, [bx[0], 16.5, -3.5], [bx[1], 20.5, 3.5], gpauldron_face, 0.3)
+        m.cube(g, "g_lame_" + side, [lx[0], 15, -3], [lx[1], 16.8, 3], gpauldron_face, 0.25)
+        m.cube(g, "g_bracer_" + side, [gx[0], 10.8, -2], [gx[1], 14.8, 2], gbracer_face, 0.45)
+    for g, x0, side in ((rleg, -5, "r"), (lleg, 0, "l")):
+        m.cube(g, "g_trousers_" + side, [x0, 5, -2.5], [x0 + 5, 10, 2.5], dcloth_face, 0.12)
+        m.cube(g, "g_boot_" + side, [x0, 0, -2.5], [x0 + 5, 5, 2.5], boot_face, 0.45)
+        m.cube(g, "g_boot_cuff_" + side, [x0, 4, -2.5], [x0 + 5, 5.5, 2.5], cuff_face, 0.6)
+        m.cube(g, "g_toecap_" + side, [x0, 0, -4], [x0 + 5, 2.2, -2], gbootcap_face, 0.5)

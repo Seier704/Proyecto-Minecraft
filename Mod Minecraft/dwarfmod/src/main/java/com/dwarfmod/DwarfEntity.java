@@ -900,15 +900,12 @@ public class DwarfEntity extends AbstractVillager implements GeoEntity {
 			case 2 -> {
 				o.add(toolForIron(serverLevel, Items.IRON_AXE, 5, 8, Enchantments.EFFICIENCY));
 				o.add(toolForIron(serverLevel, Items.IRON_PICKAXE, 6, 8, Enchantments.EFFICIENCY));
-				addArmor(o, ModItems.BRONZE, null, new int[] {5, 8, 7, 4}, 10);
 				addWarriorArmor(o, ModItems.WARRIOR_COPPER, null, new int[] {3, 5, 4, 2}, Items.COPPER_INGOT, new int[] {5, 8, 7, 4}, 10);
 			}
 			case 3 -> {
 				o.add(toolForIron(serverLevel, Items.IRON_SWORD, 4, 8, this.randomDamageEnchant()));
-				addArmor(o, ModItems.STEEL, ModItems.BRONZE, new int[] {4, 6, 5, 3}, 15);
 				addWarriorArmor(o, ModItems.WARRIOR_STEEL, ModItems.WARRIOR_COPPER, null, Items.EMERALD, new int[] {4, 7, 6, 3}, 15);
 			}
-			case 4 -> addArmor(o, ModItems.DWARVEN, ModItems.STEEL, new int[] {6, 10, 8, 5}, 20);
 			case 5 -> {
 				o.add(toolUpgrade(Items.IRON_SHOVEL, ModItems.DWARVEN_SHOVEL, 4));
 				o.add(toolUpgrade(Items.IRON_HOE, ModItems.DWARVEN_HOE, 4));
